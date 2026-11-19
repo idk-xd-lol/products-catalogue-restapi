@@ -1,3 +1,4 @@
+#imports
 from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
@@ -7,24 +8,35 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import text
 from data.database import engine
 
+#getting project dir
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 FRONTEND_DIR = PROJECT_DIR / "frontend"
 
+#creating application
 app = FastAPI()
 frontend = Jinja2Templates(directory=str(FRONTEND_DIR))
 app.mount("/static", StaticFiles(directory=str(FRONTEND_DIR)), name="static")
 
+#gets count of products
 def get_products_count():
     with engine.connect() as connection:
-        count = connection.execute(text("SELECT COUNT(*) FROM items")).scalar_one()
+        count = connection.execute(text("SELECT COUNT(*) FROM products")).scalar_one()
     return count
 
+#gets product tuple
 def get_products():
     with engine.connect() as connection:
-        products = connection.execute(text("SELECT * FROM items"))
+        products = connection.execute(text("SELECT * FROM products"))
         products = products.fetchall()
     return products
 
+def get_one_product(product_id):
+    with engine.connect() as connection:
+        products = connection.execute(text(f"SELECT * FROM products WHERE id = {product_id}"))
+        products = products.fetchall()
+    return products
+
+#in product tuple there is: id, name, image url, price, rating, rating count and url page
 
 #main page
 @app.get("/", response_class=HTMLResponse)
@@ -40,6 +52,14 @@ async def home_page(request: Request):
                 }
             )
 
-@app.get("/products/{products_url}_{products_id}")
-async def read_item(products_url, products_id):
-    return {"products_id": products_id, "products_url": products_url}
+@app.get("/products/{name}_{product_id}", response_class=HTMLResponse)
+async def product_page(request: Request, name, product_id):     
+    product = get_one_product(product_id)
+    return frontend.TemplateResponse(
+            request=request,
+            name="product.html",
+            context={
+                "product": product
+                }
+            )
+
