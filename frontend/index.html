@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Price tracker API</title>
+    <title>Product Catalogue RESTAPI</title>
     <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
   </head>
   <body>
-    <h1>Price tracker API</h1>
+    <h1>Product Catalogue RESTAPI</h1>
     <h2>Items count: {{ products_count }}</h2>
     <div class ="products">
       {% for id, name, img, price, rating, _rating_count in products %}

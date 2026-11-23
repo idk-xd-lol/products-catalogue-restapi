@@ -122,7 +122,7 @@
     <img
       class="product-image"
       src="{{ image_url }}"
-      alt="Black and orange over-ear headphones"
+      alt="{{ name }}"
     >
 
     <section class="product-details" aria-labelledby="product-name">
@@ -130,7 +130,7 @@
       <p class="price">{{ price }}</p>
 
       <div class="rating" aria-label="Rated {{ product.raiting }} out of 5 from { product.raiting-count } reviews">
-        <span>{{ rating }} · {{ rating_count }} ratings</span>
+        <span>{{ rating }} ⭐· {{ rating_count }} ratings</span>
       </div>
 
       <a class="home-button" href="/">Home</a>
