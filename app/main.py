@@ -32,11 +32,12 @@ def get_products():
 
 def get_one_product(product_id):
     with engine.connect() as connection:
-        products = connection.execute(text(f"SELECT * FROM products WHERE id = {product_id}"))
+        products = connection.execute(text("SELECT * FROM products WHERE id = :id"),
+        {"id" : product_id})
         products = products.fetchall()
     return products
 
-#in product tuple there is: id, name, image url, price, rating, rating count and url page
+#in product tuple there is: id, name, image url, price, rating and rating count
 
 #main page
 @app.get("/", response_class=HTMLResponse)
